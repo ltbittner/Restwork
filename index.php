@@ -13,8 +13,6 @@ $requestHandler = new RequestHandler();
 
 $requestHandler->handleRequest();
 
-$requestHandler->handleEndpoints();
-
 $endpoint = $requestHandler->getEndpoint();
 
 $api = require($endpoint);

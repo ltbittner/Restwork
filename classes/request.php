@@ -10,6 +10,7 @@ class RequestHandler {
 		}
 
 		$this->_setEndpoint($this->_getRoutes());
+		$this->handleEndpoints();
 	}
 
 	public function handleEndpoints() {
