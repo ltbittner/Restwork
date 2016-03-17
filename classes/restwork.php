@@ -1,12 +1,14 @@
 <?php
 
-class RestWork {
+abstract class RestWork {
+
+	abstract protected function action();
 
 	public function generateSuccessResponse($response){
 		$this->_setHeaders();
 		$response = array(
 			"status" => "success",
-			"response" => $response
+			"response" => $this->_formatForResponse($response)
 		);
 
 		echo json_encode($response);
@@ -17,8 +19,9 @@ class RestWork {
 		$this->_setHeaders();
 		$response = array(
 			"status" => "error",
-			"response" => $response
+			"response" => $this->_formatForResponse($response)
 		);
+		
 
 		echo json_encode($response);
 		die();
@@ -53,11 +56,11 @@ class RestWork {
 	private function _formatForResponse($d) {
 	    if (is_array($d)) 
 	        foreach ($d as $k => $v) 
-	            $d[$k] = utf8ize($v);
+	            $d[$k] = $this->_formatForResponse($v);
 
 	     else if(is_object($d))
 	        foreach ($d as $k => $v) 
-	            $d->$k = utf8ize($v);
+	            $d->$k = $this->_formatForResponse($v);
 
 	     else 
 	        return utf8_encode($d);
