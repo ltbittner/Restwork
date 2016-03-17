@@ -1,0 +1,40 @@
+<html>
+
+<head>	
+	<title>TEST</title>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/reqwest/2.0.5/reqwest.min.js'></script>
+</head>
+
+
+<body>
+	
+	<input type="text" placeholder='ENDPOINT' id='endpoint'>
+	<select id="type">
+		<option value="get">GET</option>
+		<option value="post">POST</option>
+	</select>
+	<button onClick="makeRequest()">GO</button>
+
+	<textarea id='response'>
+
+	</textarea>
+
+	<script>
+	function makeRequest() {
+		reqwest({
+			url: 'http://restwork.test/' + document.getElementById('endpoint').value,
+			method: document.getElementById('type').value,
+			withCredentials: true,
+			success: function(resp) {
+				var i = JSON.parse(resp);
+				document.getElementById('response').innerHTML = resp;
+			}
+		});	
+	}
+		
+	</script>
+
+</body>
+
+
+</html>

@@ -1,16 +1,26 @@
 <?php
 
 class RequestHandler {
-
 	private $endpoint = "";
 
 	public function handleRequest() {
+		$config = include('config/settings.php');
+
 		if($this->_isPreflight()) {
 			$this->_setPreflightHeaders();
+		} 
+
+
+		if($config['enable_request_limiting'] == true) {
+			$this->_checkRequestLimits();
+		} else {
+			unset($_SESSION['number_of_requests']);
+			unset($_SESSION['initial_client_request']);
 		}
 
 		$this->_setEndpoint($this->_getRoutes());
 		$this->handleEndpoints();
+
 	}
 
 	public function handleEndpoints() {
@@ -19,10 +29,45 @@ class RequestHandler {
 		}
 	}
 
+	private function _checkRequestLimits() {
+
+
+		$config = include('config/settings.php');
+		if(!isset($_SESSION['number_of_requests'])) {
+			$_SESSION['number_of_requests'] = 1;
+			$_SESSION['initial_client_request'] = Time::getTimeStamp();
+		} else {
+			$currentTime = Time::getTimeStamp();
+
+			if(Time::timeDifference($currentTime, $_SESSION['initial_client_request']) > 60) {
+				$_SESSION['number_of_requests'] = 1;
+				$_SESSION['initial_client_request'] = Time::getTimeStamp();
+			} else {
+				if($_SESSION['number_of_requests'] >= $config['max_requests_per_hour']) {
+					$this->_maxAmountOfRequests();
+				} else {
+					$_SESSION['number_of_requests'] += 1;
+
+
+				}
+			}
+		}
+	}
+
 	private function _endpointDoesntExist() {
 		$response = array(
 			"status" => "error",
 			"response" => "API endpoint does not exist"
+		);
+
+		echo json_encode($response);
+		die();
+	}
+
+	private function _maxAmountOfRequests() {
+		$response = array(
+			"status" => "error",
+			"response" => "You have reached your max amount of requests for this hour",
 		);
 
 		echo json_encode($response);
@@ -61,7 +106,19 @@ class RequestHandler {
 	}
 
 	private function _setPreflightHeaders() {
-
+		$config = include('config/settings.php');
+		if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
+			if($config['cross_domain']) {
+				header('Access-Control-Allow-Origin: ' . $config['requesting_domain']);
+				header('Access-Control-Allow-Headers: X-Requested-With');
+				header('Access-Control-Allow-Credentials: true');
+			} else {
+				header('Access-Control-Allow-Origin: *');
+      			header('Access-Control-Allow-Headers: X-Requested-With');
+			}
+		}
+		exit;
+		die();
 	}
 
 	private function _getRoutes() {
