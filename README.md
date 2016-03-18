@@ -20,11 +20,11 @@ Your API endpoints will live inside these verb folders. **The name of the file c
 These endpoints can go as deep in this structure as needed. For example, if you wanted an endpoint at **POST http://somedomain.com/users/actions/delete**, you would create the file 'actions/post/users/actions/delete.php'.
 
 ##### The format of these files should be of the following:
-
-1) Each file should contain a class which extends the **RestWork** class.
-2) This class must override the **action** function
-3) The **action** function must return a response
-3) Each file must return a new instance of this class
+          
+1) Each file should contain a class which extends the **RestWork** class.         
+2) This class must override the **action** function           
+3) The **action** function must return a response            
+3) Each file must return a new instance of this class               
 
 Below is an example.
 
