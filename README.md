@@ -13,7 +13,7 @@ Open "config/settings.php". You will need to set the variables in this file.
 **max_requests_per_hour**: How many reuqests can a user make per hour? (if above is enabled)
 
 # Basic Usage
-All of your custom code will live inside the "actions" folder. This folder comes with two subfolders, get and post. All your code will for GET requests will live inside the get folder, and code for POST requests. Feel free to add your own directories here for other request verbs.
+All of your custom code will live inside the "actions" folder. This folder comes with two subfolders, get and post. All your code will for GET requests will live inside the get folder, and code for POST requests inside the post foler. Feel free to add your own directories here for other request verbs.
 
 Your API endpoints will live inside these verb folders. **The name of the file corrosponds to the endpoint.** For example, if you wanted an endpoint at **GET http://somedomain.com/getuser**, you would create the file getuser.php in the 'actions/get' directory.
 
@@ -88,9 +88,9 @@ To generate an access token, use
 $token will now contain a random access token, which can be returned to the client to use in future requests. 
 This token will automatically be stored on the server for future usage.
 
-To check if a request has a proper access token:
-1) Get the access token from the client request
-2) Check to see if it matches the servers access token
+To check if a request has a proper access token:       
+1) Get the access token from the client request        
+2) Check to see if it matches the servers access token         
 
 ```php
     $token = $_POST['access_token'];
